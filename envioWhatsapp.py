@@ -34,9 +34,6 @@ with sync_playwright() as p:
             if mensagemAlerta.is_visible():
                 popupErro.click()
                 continue
-            # with page.expect_navigation():
-            #     page.locator("div[role=/'textbox/']")
-
             page.locator("[data-testid='compose-btn-send']").click()
 
             if caminhoArquivo:
