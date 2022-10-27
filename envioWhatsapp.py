@@ -1,4 +1,5 @@
 from multiprocessing import context
+from sre_parse import State
 import pandas as pd
 import time
 from playwright.sync_api import sync_playwright
@@ -22,14 +23,19 @@ with sync_playwright() as p:
 
         #Armazena a mensagem que foi digitada na celula abaixo do campo mensagem do excel.
         mensagem = excel.iloc[0,4]
-        link = f'https://web.whatsapp.com/send?phone={telefone}&text={mensagem}'
-
         caminhoArquivo = excel.iloc[0,5]
+        link = f'https://web.whatsapp.com/send?phone={telefone}&text={mensagem}'
 
         try:
             page.goto(link)
-            with page.expect_navigation():
-                page.locator("div[role=/'textbox/']")
+            time.sleep(6)
+            mensagemAlerta = page.locator("._2Nr6U")
+            popupErro = page.locator("//*[@id='app']/div/span[2]/div/span/div/div/div/div/div/div[2]/div/div/div/div", has_text='OK')
+            if mensagemAlerta.is_visible():
+                popupErro.click()
+                continue
+            # with page.expect_navigation():
+            #     page.locator("div[role=/'textbox/']")
 
             page.locator("[data-testid='compose-btn-send']").click()
 
